@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:inventory/src/model/rawmodel.dart';
+
 import 'package:inventory/src/view/rawmaterialadd.dart';
 import 'package:inventory/src/view/dashboard.dart';
-import 'package:inventory/src/db/rawinventory.dart';
+import 'package:inventory/src/db/moorRaw.dart';
 
+
+
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RawInventory extends StatefulWidget{
@@ -18,71 +21,49 @@ class RawInventory extends StatefulWidget{
 class _RawInventory extends State<RawInventory>{
 
   
-  late List<RawInvntory> rawInvtory;
-  bool isLoading =false;
+
   
   @override
   void initState(){
     super.initState();
 
-    refreshRawM();
+    // refreshRawM();
 
   } 
 
-  // @override
-  // void dispose() {
-  //   RawInvtDatabaseHelper.instance.close();
-
-  //   super.dispose();
-  // }
 
 
-   Future refreshRawM()async{
-    setState(() => isLoading = true);
-    
-    this.rawInvtory = await RawInvtDatabaseHelper.instance.listAll();
-  
-    setState(() => isLoading = false);
-    
-    
-  }
   @override
  Widget build(BuildContext context){
     return Scaffold(
 
-      body: Column(
-        children: [
-          Row(
-            
-            children: [
-              SizedBox(height: 20,),
-              InkWell(
-                onTap: ()=>{
-                   Navigator.pop(context,MaterialPageRoute(builder:(context)=>Dashboard()))
-                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Icon(Icons.arrow_back_ios),
-                ))
-          ],),
-           Row(children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text("Raw Inventory",style: GoogleFonts.lato(textStyle: TextStyle(fontSize: 50,fontWeight: FontWeight.w900)), ),
-            )
-          ],),
-
-          Center(
-            child: isLoading
-            ? CircularProgressIndicator()
-            : rawInvtory.isEmpty
-              ? Text(
-                 'No Product',style:TextStyle(color:Colors.black12,fontSize: 40)
+      body: ListView(
+        children:[ Column(
+          children: [
+            Row(
+              
+              children: [
+          
+                InkWell(
+                  onTap: ()=>{
+                     Navigator.push(context,MaterialPageRoute(builder:(context)=>Dashboard()))
+                   },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(Icons.arrow_back_ios),
+                  ))
+            ],),
+             Row(children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text("Raw Inventory",style: GoogleFonts.lato(textStyle: TextStyle(fontSize: 50,fontWeight: FontWeight.w900)), ),
               )
-              :tableView(),
-          ),
-        ],
-      ),
+            ],),
+      
+           _buildTaskList(context),
+          ],
+        ),
+         ] ),
       floatingActionButton: FloatingActionButton( 
         backgroundColor: Colors.blueAccent,
         child: Icon(Icons.add),
@@ -90,7 +71,7 @@ class _RawInventory extends State<RawInventory>{
           await Navigator.of(context).push( 
             MaterialPageRoute(builder:(context)=>RawMaterialAdd()),
           );
-          refreshRawM();
+          // refreshRawM();
         },
       ),
 
@@ -98,94 +79,110 @@ class _RawInventory extends State<RawInventory>{
   }
 
     
-   tableView() {
   
-  return DataTable(
 
-    columns: [
-      DataColumn(
-        label: Text("Name",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold),),
+StreamBuilder<List<RawMaterial>>_buildTaskList(BuildContext context) {
+     final db = Provider.of<RawMaterialsDatabase>(context,listen:true);
+   
+     return StreamBuilder(
+       stream: db.watchallProducts(),
+       builder: (context, AsyncSnapshot<List<RawMaterial>> snapshot){
+         final rawMaterials = snapshot.data ?? [];
+
+         if (snapshot.hasError) {
+              return Text("Error");
+            }
+         if (snapshot.data == null || snapshot.data!.length == 0) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                  
+                    Center(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("NO RAW MATERIALS",style: GoogleFonts.lato(textStyle: TextStyle(color:Colors.grey[300],fontSize: 50,fontWeight: FontWeight.w900)),),
+                    ))
+                  ],
+                ),
+              );
+            }  
+           if (snapshot.hasData){
+
+            return  SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: [ 
+                     DataColumn(
+                        label: Text("Name",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
 
 
-        ),
-      DataColumn(
-          label: Text("Price",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold),),
-          ),
-      DataColumn(
-          label: Text("Date",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold),),
-          ),
-        
-    ], 
-    rows: rawInvtory
-    .map((e) 
-    =>DataRow(cells: [
-      DataCell(
-        Text(e.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
-      ),
-      DataCell(
-        Text(e.price.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 20)
-      ),
-      ),
-       DataCell(
-        Text(e.date.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 20)
-      ),
-      ),
+                        ),
+                      DataColumn(
+                          label: Text("Price",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                      DataColumn(
+                          label: Text("Date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                          DataColumn(
+                          label: Text("Delete",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                     
+                     
+                        
+                  ], 
+                  rows: snapshot.data!
+                  .map((e) 
 
-    ])
-    ).toList()
-      
-    );
+                  =>DataRow(cells: [
+                            DataCell(
+                              Text(e.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10),)
+                            ),
+                            
+                            DataCell(
+                              Text(e.price.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 10)
+                            ),
+                            ),
+                            DataCell(
+                              Text(e.date.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 10)
+                            ),
+                            
+                            ),
+                            DataCell(
+                              InkWell(
+                                onTap: ()=>db.deleteProduct(e),
+                                child: Icon(Icons.delete))
+                            )
+                            
+                          ])).toList()
+                                        ),
+            ));
+                
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+           return Text('No Data');
 
-}
+       }
 
+       );
+
+  }
 
     
             
   }
-// Widget saveButton(){
-  
-
-//  return Padding(
-//       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-//       child: ElevatedButton(
-//         style: ElevatedButton.styleFrom(
-//           onPrimary: Colors.white,
-          
-//         ),
-//         onPressed: addOrUpdate,
-//         child: Text('Save'),
-        
-//       ),
-//     );
 
 
 
 
 
 
-  
-// Future _updateDb ()async{
-//   final rawInvntory = RawInvntory(
-//        name: nameController.text,
-//       price: priceController.text as double,
-//       desc: descController.text, 
-//       date: DateTime.now(),
-//       );
-//       await RawInvtDatabaseHelper.instance.update(rawInvntory);
-
-// Future  _addToDb() async {
-//     final rawInventory = RawInvntory(
-
-//       name: nameController.text,
-//       price: priceController.text as double,
-//       desc: descController.text, 
-//       date: DateTime.now(),
-//       );
-
-    
-//     await RawInvtDatabaseHelper.instance.create(rawInventory );
-    
-//   }
 
   
 

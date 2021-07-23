@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -31,11 +31,21 @@ dependencies:
   google_fonts: ^2.1.0
   image_picker: ^0.8.1+3
 
+  intl: ^0.17.0
+  moor: ^4.4.1
+  provider: 
+  sqlite3_flutter_libs:
+  syncfusion_flutter_charts: ^19.2.48
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  sqflite: ^2.0.0+3
+ 
   flutter_staggered_grid_view: ^0.4.0
+  moor_generator: ^4.4.1
+  build_web_compilers:
+  build_runner:
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -48,6 +58,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/imagess/IMG_0460.JPG
+    - assets/imagess/add.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

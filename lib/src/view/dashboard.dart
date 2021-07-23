@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:inventory/src/db/moorRaw.dart';
+import 'package:inventory/src/db/moorProductdb.dart';
 import 'package:inventory/src/view/productInventory.dart';
 import 'package:inventory/src/view/rawinv.dart';
 import 'package:inventory/src/view/report.dart';
 import 'package:inventory/src/view/customer.dart';
-import 'package:inventory/src/model/productmodel.dart';
-import 'package:inventory/src/db/db.dart';
+
+
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 
 class Dashboard extends StatefulWidget{
 
@@ -15,27 +18,14 @@ class Dashboard extends StatefulWidget{
 
 class _DashboardState extends State<Dashboard>{
 
-late List<Product>product;
- bool isLoading  = false;
-
  @override 
  void initState(){
    super.initState();
-   refreshProducts();
+  
  }
-@override
-void dispose(){
-  ProductDatabase.instance.close();
+late List <RawMaterial> rawMaterial;
 
-  super.dispose();
-}
-Future refreshProducts ()async{
-  setState(()=>isLoading = true );
 
-  this.product = await ProductDatabase.instance.readAllProduct();
-
-  setState(()=>isLoading = false);
-}
   @override 
   Widget build(BuildContext context){
     return  Scaffold(
@@ -155,11 +145,11 @@ Future refreshProducts ()async{
                     ),
                   ),
                 ),
-                Container(
+                // Container(
                   
-                  height: 100,
-                  child: searchView(),
-                  ),
+                //   height: 100,
+                //   child: searchView(),
+                //   ),
 
                   SizedBox(height: 20,),
             
@@ -183,76 +173,17 @@ Future refreshProducts ()async{
     
   }
    
-  gridViw (){
-    return  Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-         Container( 
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration( 
-              borderRadius:BorderRadius.circular(20),
-              color: Colors.blueAccent,
-              
-              ),
-    
-            ),
-           
-          SizedBox(width: 20,),
-          Container( 
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration( 
-              borderRadius:BorderRadius.circular(20),
-              color: Colors.blueAccent
-    
-            ),
-            
-            
-          ), 
-      
+  // gridViw (){
+  //   Container(
+  //     child:new StaggeredGridView.countBuilder(
+  //       crossAxisCount: 4, 
+  //       itemBuilder:(context,index){
 
-          SizedBox(width: 20,),
-           Container( 
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration( 
-              borderRadius:BorderRadius.circular(20),
-              color: Colors.blueAccent
-    
-            ),
-          ),
-        
-          SizedBox(width: 20,),
-           Container( 
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration( 
-              borderRadius:BorderRadius.circular(20),
-              color: Colors.blueAccent,
-              image: DecorationImage(image: AssetImage("assets/imagess/IMG_0460.JPG"),
-              fit: BoxFit.cover,
-              ),
-    
-            ),
-           ),
-          SizedBox(width: 20,),
-         Container( 
-            width: 200,
-            height: 300,
-            decoration: BoxDecoration( 
-              borderRadius:BorderRadius.circular(20),
-              color: Colors.redAccent,
-              image: DecorationImage(image: AssetImage("assets/imagess/IMG_0460.JPG"),
-              fit: BoxFit.cover,
-              ),
-    
-            ),
-           ),
-        ],
-      
-    );
-  }
+  //       }, 
+  //       staggeredTileBuilder: staggeredTileBuilder)
+  //   );
+  // }
+  
   searchView(){
 
   return   Container(
@@ -291,7 +222,11 @@ Future refreshProducts ()async{
                       
                           
                         ),
-                       
+                       onChanged: (String text)async{
+                        //  List<Map> res = await db.rawQuery(
+                        //                 "SELECT * FROM sentences WHERE title LIKE '%${text}%' OR  body LIKE '%${text}%'");
+                        //             print(res);
+                       },
                         cursorWidth: 10,
                         cursorHeight: 10,
                         cursorRadius: Radius.circular(10),

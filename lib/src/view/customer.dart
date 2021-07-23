@@ -1,8 +1,15 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:inventory/src/view/dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/src/model/customer.dart';
+import 'package:inventory/src/db/customerrinfo.dart';
+import 'package:provider/provider.dart';
+import 'package:inventory/src/db/moorCust.dart';
+import 'package:inventory/src/view/addcustomer.dart';
+
 
 class CustomerInfo extends StatefulWidget{
 
@@ -13,6 +20,8 @@ class CustomerInfo extends StatefulWidget{
 }
 
 class _CustomerInfoState extends State<CustomerInfo>{
+
+  
 
   @override 
   Widget build(BuildContext context){
@@ -42,244 +51,118 @@ class _CustomerInfoState extends State<CustomerInfo>{
               padding: const EdgeInsets.all(10.0),
               child: Text("Customer Info",style: GoogleFonts.lato(textStyle: TextStyle(fontSize: 50,fontWeight: FontWeight.w900)), ),
             )
-          ],)
+          ],),
+            _buildTaskList(context),
         
         ],)
       ),
+      
+      
           floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
         onPressed:(){
-          showModalBottomSheet<void>(
-            
-            shape: RoundedRectangleBorder(
-     borderRadius: BorderRadius.circular(50.0),
-     
-  ),
-  backgroundColor: Colors.transparent,
-            //shape:  ,
-            context: context,
-            
-            builder: (BuildContext context) {
-              return Container(
-                height: 800,
-                color: Colors.white,
-                child: Center(
-                child:Column(
-            children:[
-              Divider(height: 20,thickness: 2,indent: 400,endIndent: 400,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-               
-                   new Flexible(
-                    child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    // child: Container(
-                    //   width: 50,
-                    //   height: 50,
-
-                    //   child: Icon(Icons.camera_alt,color: Colors.grey,),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius:BorderRadius.circular(70) ,
-                    //     color: Colors.grey[200]
-
-                    //   ),),
-                  ),
-        
-              ),
-                
-              
-                  
-
-                ],
-                
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                new Flexible(child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-
-                    color: Colors.grey[200],
-                    
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Customers Name ',
-                        hintStyle:TextStyle(fontWeight: FontWeight.bold ,color: Colors.grey),
-                        border: InputBorder.none,
-                        
-                        
-                        focusColor:Colors.redAccent,
-                        
-                    
-                        
-                      ),
-                     
-                      cursorWidth: 10,
-                      cursorHeight: 10,
-                      cursorRadius: Radius.circular(10),
-                      cursorColor: Colors.redAccent,
-                    ),
-                  ),
-                ),
-              ),),
-                 
-
-              ],),
-             Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                new Flexible(child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-
-                    color: Colors.grey[200],
-                    
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Phone Number ',
-                        hintStyle:TextStyle(fontWeight: FontWeight.bold ,color: Colors.grey),
-                        border: InputBorder.none,
-                        
-                        
-                        focusColor:Colors.redAccent,
-                        
-                    
-                        
-                      ),
-                     
-                      cursorWidth: 10,
-                      cursorHeight: 10,
-                      cursorRadius: Radius.circular(10),
-                      cursorColor: Colors.redAccent,
-                    ),
-                  ),
-                ),
-              ),),
-                 
-
-              ],),
-                     
-             
-              
-              
-                    Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-
-                    color: Colors.grey[200],
-                    
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Location',
-                        hintStyle:TextStyle(fontWeight: FontWeight.bold ,color: Colors.grey),
-                        border: InputBorder.none,
-                        
-                        focusColor:Colors.redAccent,
-                        
-                    
-                        
-                      ),
-                     
-                      cursorWidth: 10,
-                      cursorHeight: 10,
-                      cursorRadius: Radius.circular(10),
-                      cursorColor: Colors.redAccent,
-                    ),
-                  ),
-                ),
-              ),
-
-              Row(
-                children: [
-
-                  new Flexible(child: 
-                      Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-
-                    color: Colors.grey[200],
-                    
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TextField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        hintText: 'Tin Number',
-                        hintStyle:TextStyle(fontWeight: FontWeight.bold ,color: Colors.grey),
-                        border: InputBorder.none,
-                        
-                        focusColor:Colors.redAccent,
-                        
-                    
-                        
-                      ),
-                     
-                      cursorWidth: 10,
-                      cursorHeight: 10,
-                      cursorRadius: Radius.circular(10),
-                      cursorColor: Colors.redAccent,
-                    ),
-                  ),
-                ),
-              ),)
-                ],
-              ),
-
-              SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  child: Center(child: Text("Approve",style: TextStyle(color: Colors.white,fontFamily:'Railway',fontSize: 20,fontWeight: FontWeight.bold),)),
-                  
-                  decoration: BoxDecoration(
-                    
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.redAccent,
-                  ),
-                ),
-              )
-
-            ]
-          )
-                ),
-              );
-            }
-  );
+            Navigator.of(context).push( 
+            MaterialPageRoute(builder:(context)=>AddCustomerPage()
+            ));
         }
       )
     );
+  }
+  
+
+   StreamBuilder<List<Customer >>_buildTaskList(BuildContext context) {
+     final db = Provider.of<CustomerDatabase>(context,listen: true);
+
+     return StreamBuilder(
+       stream: db.watchallCustomers(),
+       builder: (context, AsyncSnapshot<List<Customer>> snapshot){
+         final customers = snapshot.data ?? [];
+
+         if (snapshot.hasError) {
+              return Text("Error");
+            }
+         if (snapshot.data == null || snapshot.data!.length == 0) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                  
+                    Center(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("NO CUSTOMER",style: GoogleFonts.lato(textStyle: TextStyle(color:Colors.grey[300],fontSize: 50,fontWeight: FontWeight.w900)),),
+                    ))
+                  ],
+                ),
+              );
+            }  
+           if (snapshot.hasData){
+            return  SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: [ 
+                     DataColumn(
+                        label: Text("Name",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+
+
+                        ),
+                      DataColumn(
+                          label: Text("Phone",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                      DataColumn(
+                          label: Text("Location",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                      DataColumn(
+                          label: Text("Tin Number",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                          DataColumn(
+                          label: Text("Delete",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                  ], 
+                  rows: snapshot.data!
+                  .map((e) 
+
+                  =>DataRow(cells: [
+                            DataCell(
+                              Text(e.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10),)
+                            ),
+                            
+                            DataCell(
+                              Text(e.phone.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 10)
+                            ),
+                            ),
+                            DataCell(
+                              Text(e.location.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 10)
+                            ),
+                            
+                            ),
+                             DataCell(
+                              Text(e.tinnumber.toString(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 10)
+                            )),
+                            DataCell(
+                              InkWell(
+                                onTap: ()=>db.deleteProduct(e),
+                                child: Icon(Icons.delete))
+                            )
+                          ])).toList()
+                                        ),
+            ));
+                
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+           return Text('No Data');
+
+       }
+
+       );
+
   }
   
 }

@@ -1,114 +1,118 @@
  
-import 'package:sqflite/sqflite.dart';
+import 'package:inventory/src/view/productadd.dart';
+// import 'package:sqflite/sqflite.dart';
 import 'package:inventory/src/model/productmodel.dart';
 import 'package:path/path.dart';
 
 class ProductDatabase{
   static final ProductDatabase instance = ProductDatabase._init();
-  static Database? _database;
+
+  static final colId    = 'id';
+  static final colName  = 'name';
+  static final colDesc  = 'desc';
+  static final colPrice = 'price';
+  static final colDate  = 'date';
+  static final colPhoto = 'photo';
+
+  // static Database? db;
   ProductDatabase._init();
 
-  Future<Database> get database async{
-    if (_database!= null) return _database!;
+  // Future<Database> get database async{
+  //   if (db!= null) return db!;
 
-    _database = await _initDB('product.db');
-    return _database!;
+  //   db = await _initDB('products.db');
+  //   return db!;
     
-  }
-  Future <Database> _initDB (String filePath)async {
-    final dbpath = await getDatabasesPath();
-    final path = join(dbpath,filePath);
+  // }
+ 
 
-    return await openDatabase(path, version: 1, onCreate: _createDatabase);
-  }
+//   Future <Database> _initDB (String filePath)async {
+//     final dbpath = await getDatabasesPath();
+//     final path = join(dbpath,filePath);
+
+//     return await openDatabase(path, version: 3, onCreate: _createDatabase);
+//   }
   
-  Future _createDatabase (Database db, int version) async {
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final intgerType = 'INTEGER NOT NULL';
-    final textType = 'TEXT NOT NULL';
-    final doubleType = 'DOUBLE NOT NULL';
-    // final boolType = 'BOOLEAN NOT NULL';
+//   Future _createDatabase (Database db, int version) async {
+  
     
-    await db.execute('''
-     CREATE TABLE $tableProduct(
-       ${ProductField.id} $idType,
-       ${ProductField.name} $textType,
-       ${ProductField.description} $textType,
-       ${ProductField.imagePath} $textType,
-       ${ProductField.price} $doubleType,
-       ${ProductField.numberofproduct} $intgerType,
+//       await db.execute('''
+//           create table $tableProduct (
+//             $colId INTEGER PRIMARY KEY,
+//             $colName TEXT NOT NULL,
+//             $colPrice REAL,
+//             $colDesc TEXT NOT NULL,
+//             $colDate DATE ,
+//             $colPhoto BLOB)
+//           ''');
 
 
-     )
-    ''');
+//   }
+// Future savePicture(ProductModel _productModel) async {
+//   final db  = await instance.database;
+//   return await db.insert("Picture", _productModel.toMap());
+// }
 
-
-  }
-
-  Future<Product> create (Product product)async{
-    final db  = await instance.database;
+//   Future create (ProductModel _productModel)async{
+//     final db  = await instance.database;
     
-     final id = await db.insert(tableProduct,product.toJson());
+//      return  await db.insert(tableProduct ,_productModel.toMap());
+
+//   }
 
 
-    return product.copy(id: id);
 
-  } 
-  Future <Product> readProduct(int id) async{
 
-    final db  = await instance.database;
-    final maps = await db.query(
-      tableProduct,
-      columns: ProductField.values, 
-      where: '${ProductField.id}=?',
-      whereArgs: [id ],
-   );
-                                              
-    if (maps.isNotEmpty){
-      return Product.fromJson(maps.first);
-    }
-    else{
-      throw Exception('ID $id not found');
-    }
-  }
-  Future <List<Product>> readAllProduct()async{
 
-    final db = await instance.database;
-    
+//     Future <int> update(ProductModel _productModel)async{
+//     final db  = await instance.database;
 
-    //  final orderBy = '${ProductField.time}ASC';
-    // final result = await db.query(tableProduct.orderBy:orderBy);
-    final result = await db.query(tableProduct);
-    return result.map((json) => Product.fromJson(json)).toList();
-
-  }
-  Future <int> update(Product product)async{
-    final db = await instance.database;
-
-    return db.update(
-      tableProduct, 
-      product.toJson(),
-      where: '${ProductField.id}=?',
-      whereArgs:[product.id],
-
-      );
-  }
-  Future <int> delete (int id) async{
-    final db = await instance.database;
-
-    return await db.delete(
-      tableProduct,
-      where: '${ProductField.id}=?',
-      whereArgs:[id],
-    );
-  }
-  Future close() async{
-    final db  = await instance.database;
-    db.close();
-  }
-
+//     return db.update(tableProduct, 
+//                      _productModel.toMap(),
+//                      where: '${ProductModel.colId}=?',
+//                      whereArgs: [_productModel.id]
+//                      );
+//   }
+  
+//    Future <List<ProductModel>>listAll()async{
+//     final db = await instance.database;
    
+    
+//     final result =await db.query(tableProduct);
+//      return result.length == 0
+//       ? []
+//       : result.map((x) => ProductModel.fromMap(x)).toList();
+//   }
+//  Future<int> delete (int id )async{
+//     final db = await instance.database;
+
+//     return await db.delete(tableProduct,
+//                            where: '${ProductModel.colId}=?',
+//                            whereArgs: [id]);
+//   } 
+// // Future <List<ProductModel>>orderbytime()async{
+// //   final db = await instance.database;
+// //   DateTime date = DateTime.now();
+  
+// //   return await db.rawQuery('''SELECT * FROM $tableProduct WHERE $colDate BETWEEN '$twoDaysAgo' AND '$today''');
+ 
+// // }
+//   Future close() async{
+//     final db  = await instance.database;
+//     db.close();
+//   }
+
+// Future  <List<Map<String, Object?>>>queryLastTwoDays() async {
+//    final db = await instance.database;
+  
+//     DateTime now = DateTime.now();
+//     DateTime oneDayAgoFromNow = now.subtract(Duration(hours: -24));
+//     var today = now.millisecondsSinceEpoch;
+//     var oneDayAgo = oneDayAgoFromNow.millisecondsSinceEpoch;
+//     return await db.rawQuery('''SELECT * FROM $tableProduct WHERE $colDate BETWEEN '$today' AND '$oneDayAgo ' ''');
+//   }
+
+
+// }
 
 }
-
- 

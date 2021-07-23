@@ -1,25 +1,25 @@
 final String tableCustomer = 'customer';
 
-class CustomerField{
 
-  static final String id = '_id';
-  static final String name = 'name';
-  static final String location = 'location';
-  static final String phonenumber  = phonenumber;
-  static final String  tinnumber = tinnumber;
+
+class CustomerModel{
+  static const colId = 'id';
+  static const colName  = 'name';
+  static const colLocation  = 'location';
+  static const colPhone  = 'phonenum'; 
+  static const colTin = 'tinnumber';  
+
+
+  late int? id ;
+  late String name;
+  late String location;
+  late int phonenumber;
+  late int tinnumber;
+
   
-  
-}
 
-class Customer{
-  final int id ;
-  final String name;
-  final String location;
-  final int phonenumber;
-  final int tinnumber;
-
-  const Customer({
-    required this.id, 
+   CustomerModel({
+     this.id, 
     required this.name, 
     required this.location, 
     required this.phonenumber,
@@ -27,55 +27,24 @@ class Customer{
 }
   );
 
-  Customer delete({
-    int? id,
-    String? name,
-    String? location,
-    int? phonenumber,
-    int? tinnumber,
-  })=>
-  Customer(
-    id: id ?? this .id,
-    name: name ?? this.name,
-    location:  location ?? this.location,
-    phonenumber:  phonenumber ?? this.phonenumber,
-    tinnumber: tinnumber ?? this.tinnumber,
-  );
-   Map <String , Object>toJson()=>{
-    CustomerField.id : id,
-    CustomerField.phonenumber : phonenumber,
-    CustomerField.location :location,
-    CustomerField.name : name,
-    CustomerField.tinnumber:tinnumber,
+ 
 
+ CustomerModel.fromMap(Map<String, dynamic> map) {
+    id    = map[colId];
+    name  = map[colName];
+    location  = map[colLocation];
+    phonenumber = map[colPhone];
+    tinnumber  = map[colTin];
     
-  };
+  }
 
-  Customer copy({
-    int? id,
-    String? name,
-    String? location,
-    int? phonenumber,
-    int? tinnumber,
-    
+Map <String , dynamic>toMap(){
+  var map = <String, dynamic>{colName:name,colPhone:phonenumber,colTin:tinnumber};
 
-  })=>
-  Customer(
-    id: id ?? this.id,
-    name : name ?? this.name,
-    location :   location ?? this.location,
-    phonenumber: phonenumber ?? this.phonenumber,
-    tinnumber: tinnumber ?? this.tinnumber,
-
-  );
-  static Customer fromJson(Map<String, Object?>json)=>Customer( 
-    id: json[CustomerField.id] as int,
-
-    name: json[CustomerField.name]as String,
-    location: json[CustomerField.location] as String,
-    phonenumber: json[CustomerField.phonenumber]as int,
-    tinnumber: json[CustomerField.tinnumber]as int,
-
-  );
+  if (id != null) {
+      map[colId] = id;
+    }
+  return map;
+}
 
 }

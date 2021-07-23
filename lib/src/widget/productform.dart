@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:inventory/src/model/productmodel.dart';
-import 'package:inventory/src/utility/utility.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+
 class ProductFormWidget extends StatelessWidget{
 
   final String? name;

@@ -23,9 +23,3 @@ class Utility {
     return base64Encode(data);
   }
 }
-
-// pickImageFromGallery() {
-//   ImagePicker.pickImage(source: ImageSource.gallery).then((imgFile) {
-//     String imgString = Utility.base64String(imgFile.readAsBytesSync());
-//   });
-// }
